@@ -1,0 +1,190 @@
+﻿@* @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+@using ProyectoFinalDotNet8.Data
+@inject HttpClient httpClient
+@inject IUserStore<ApplicationUser> UserStore
+@inject UserManager<ApplicationUser> UserManager
+
+@page "/Editar"
+
+
+
+<PageTitle>Registro</PageTitle>
+
+<h1>Registro</h1>
+<EditForm Model="Input" OnValidSubmit="RegisterUser">
+    <div class="row">
+        <div class="col-md-4">
+       
+            <DataAnnotationsValidator />
+            <h2>Crea una cuenta nueva.</h2>
+            <hr />
+            <h3>Datos Personales</h3>
+
+            <div class="form-floating mb-3">
+                <InputText type="text" @bind-Value="Input.Nombre" class="form-control" autocomplete="nombre" aria-required="true" placeholder="Nombre" />
+                <label for="nombreCliente">Nombres</label>
+                <ValidationMessage For="() => Input.Nombre" class="text-danger" />
+            </div>
+
+
+            <div class="form-floating mb-3">
+                <InputText type="text" @bind-Value="Input.Apellidos" class="form-control" autocomplete="apellido" aria-required="true" placeholder="Apellido" />
+                <label for="apellidoCliente">Apellidos</label>
+                <ValidationMessage For="() => Input.Apellidos" class="text-danger" />
+            </div>
+
+
+
+            <div class="form-floating mb-3">
+                <InputDate @bind-Value="Input.FechaNacimiento" class="form-control" autocomplete="fechaNacimiento" aria-required="true" placeholder="Fecha de Nacimiento" />
+                <label for="fechaNacimientoCliente">Fecha de Nacimiento</label>
+                <ValidationMessage For="() => Input.FechaNacimiento" class="text-danger" />
+            </div>
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="nombre@ejemplo.com" />
+                <label for="email">Correo electrónico</label>
+                <ValidationMessage For="() => Input.Email" class="text-danger" />
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Guardar</button>
+        </div>
+    </div>
+
+</EditForm>
+
+@code {
+
+    [SupplyParameterFromForm]
+    private ApplicationUser Input { get; set; } = new();
+
+
+    public string Id { get; set; } = string.Empty;
+
+    public List<ApplicationUsersRoles> ListApplicationUsersRoles { get; set; } = new();
+    public List<ApplicationRoles> ListApplicationRoles { get; set; } = new();
+    public List<ApplicationUser> ListUsuario { get; set; } = new List<ApplicationUser>();
+    public ApplicationUser Usuario { get; set; } = new ApplicationUser();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListUsuario = (await httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/Usuers"))!;
+
+        ListApplicationUsersRoles = await httpClient.GetFromJsonAsync<List<ApplicationUsersRoles>>("api/Usuers/UserRole") ?? new List<ApplicationUsersRoles>();
+        ListApplicationRoles = await httpClient.GetFromJsonAsync<List<ApplicationRoles>>("api/Usuers/Roles") ?? new List<ApplicationRoles>();
+        if (string.IsNullOrEmpty(Id))
+        {
+
+        }
+        else
+        {
+            Usuario = BuscarUsuario(Id);
+            Input = Usuario;
+        }
+
+    }
+
+    public ApplicationUser BuscarUsuario(string Id)
+    {
+        var usuario = ListUsuario.FirstOrDefault(u => u.Id == Id);
+
+        return usuario!;
+    }
+
+    public async Task RegisterUser(EditContext editContext)
+    {
+        // using var response = await httpClient.PostAsJsonAsync("api/Clientes", clientes);
+
+        var user = CreateUser();
+
+        user.Nombre = Input.Nombre;
+        user.Apellidos = Input.Apellidos;
+        user.FechaNacimiento = Input.FechaNacimiento;
+
+
+        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        var emailStore = GetEmailStore();
+        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        // var result = await UserManager.CreateAsync(user, Input.Password);
+        var resultRole = await UserManager.AddToRoleAsync(user, "Invitado");
+
+        // if (!result.Succeeded)
+        // {
+        //     identityErrors = result.Errors;
+        //     return;
+        // }
+
+        // var userId = await UserManager.GetUserIdAsync(user);
+        // var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+        // code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        // var callbackUrl = NavigationManager.GetUriWithQueryParameters(
+        //     NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
+        //     new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
+
+        // await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
+
+        // if (UserManager.Options.SignIn.RequireConfirmedAccount)
+        // {
+        //     RedirectManager.RedirectTo(
+        //         "Account/RegisterConfirmation",
+        //         new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
+        // }
+
+        // await SignInManager.SignInAsync(user, isPersistent: false);
+        // RedirectManager.RedirectTo(ReturnUrl);
+
+
+
+        // if (!response.IsSuccessStatusCode)
+        // {
+        //     return;
+        // }
+
+        // var clienteDevuelto = await response.Content.ReadFromJsonAsync<Clientes>();
+
+        // if (clienteDevuelto is not null)
+        // {
+        //     clientes = clienteDevuelto;
+        //     StateHasChanged();
+        // }
+    }
+
+    private ApplicationUser CreateUser()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUser>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
+                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+        }
+    }
+
+    private ApplicationUsersRoles CreateUserRole()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUsersRoles>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUsersRoles)}'. " +
+                $"Ensure that '{nameof(ApplicationUsersRoles)}' is not an abstract class and has a parameterless constructor.");
+        }
+    }
+
+    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    {
+        if (!UserManager.SupportsUserEmail)
+        {
+            throw new NotSupportedException("The default UI requires a user store with email support.");
+        }
+        return (IUserEmailStore<ApplicationUser>)UserStore;
+    }
+
+
+}
+
+ *@

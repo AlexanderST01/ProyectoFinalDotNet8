@@ -1,0 +1,111 @@
+﻿@rendermode InteractiveServer
+@page "/GestionUsuario"
+@using ProyectoFinalDotNet8.Data
+@using Shared.Models
+@inject HttpClient httpClient
+@attribute [Authorize(Roles = "Admin")]
+
+<div>
+    <div class="row justify-content-start ">
+        <div class=" col-sm-10 col-md-9 col-lg-12 col-xl-xxl-7 ">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Usuarios</h1>
+                    <div class="row">
+                       
+                        <div class="row">
+                            <div class="col">
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive ">
+                        <table border="1" class="table table-bordered table-striped ">
+                            <thead>
+                                <tr class="table-secondary">
+                                    <th>Nombres</th>
+                                    <th>Apellidos</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Ver</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var Usuario in ListUsuario)
+                                {
+                                    <tr>
+                                        <td>@Usuario.Nombre</td>
+                                        <td>@Usuario.Apellidos</td>
+                                        <td>@Usuario.Email</td>
+                                        <td>@ObtenerRol(Usuario.Id)</td>
+                                        <td><a href="Editar/@Usuario.Id">ver</a></td>
+
+                                        @* <td><a href="RegistroCentroEducativo/@centroEducativo.CentroEducativoId">ver</a></td> *@
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                            <th>
+                                Conteo: @Conteo
+                            </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<ApplicationUser> ListUsuario { get; set; } = new List<ApplicationUser>();
+
+    public int Conteo;
+    public int opciones;
+    public CentrosEducativos CentroEducativoAuxiliar = new CentrosEducativos();
+    public List<Distritos> ListDistritos { get; set; } = new();
+    public List<Regiones> ListRegiones { get; set; } = new();
+    public List<ApplicationUsersRoles> ListApplicationUsersRoles { get; set; } = new();
+    public List<ApplicationRoles> ListApplicationRoles { get; set; } = new();
+    public int DistritoId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // ListDistritos = await httpClient.GetFromJsonAsync<List<Distritos>>("api/distritos") ?? new List<Distritos>();
+        // ListRegiones = await httpClient.GetFromJsonAsync<List<Regiones>>("api/Regiones") ?? new List<Regiones>();
+        ListApplicationUsersRoles = await httpClient.GetFromJsonAsync<List<ApplicationUsersRoles>>("api/Usuers/UserRole") ?? new List<ApplicationUsersRoles>();
+        ListApplicationRoles = await httpClient.GetFromJsonAsync<List<ApplicationRoles>>("api/Usuers/Roles") ?? new List<ApplicationRoles>();
+        await Buscar();
+    }
+
+    public async Task Buscar()
+    {        
+        ListUsuario = (await httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/Usuers"))!;        
+        Conteo = ListUsuario != null ? ListUsuario.Count : 0;
+    }
+    public string NombreRegion(string CodigoRegional)
+    {
+        return ListRegiones.FirstOrDefault(r => r.CodigoRegional == CodigoRegional)?.NombreRegion ?? "No encontrado";
+    }
+
+    public string NombreDistrito(string CodigoDistrital)
+    {
+        return ListDistritos.FirstOrDefault(d => d.CodigoDistrito == CodigoDistrital)?.NombreDistrital ?? "No encontrado";
+    }
+
+    public Distritos ObtenerDistrito(int DistritoId)
+    {
+        return ListDistritos.FirstOrDefault(d => d.DistritoId == DistritoId)!;
+    }
+    
+    public string ObtenerRol(string Id)
+    {
+        var rol = ListApplicationUsersRoles.FirstOrDefault(r => r.UserId == Id);
+        if(rol == null) return "No tiene role";
+        return ListApplicationRoles.FirstOrDefault(r => r.Id == rol!.RoleId)?.Name ?? "No tiene role";
+    }
+}

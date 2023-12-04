@@ -2,7 +2,7 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Bienvenidos al Sistema Gestión de Entregas de Comida para Centros Educativos <strong>GECCE</strong></h1>
+<h1>Bienvenidos al Sistema Gesti&oacute;n de Entregas de Comida para Centros Educativos <strong>GECCE</strong></h1>
 
 <div class="container">
     <div class="card-header">
@@ -73,7 +73,7 @@
 
 
     <div class="card-header">
-        <AuthorizeView Roles="Director, Empleado, Admin">
+        <AuthorizeView Roles="Director, Empleado, Admin, Invitado">
             <Authorized>
                 <h3>Consultas</h3>
             </Authorized>
@@ -81,7 +81,7 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <AuthorizeView Roles="Director, Empleado, Admin">
+            <AuthorizeView Roles="Director, Empleado, Admin, Invitado">
                 <Authorized>
                     <div class="card">
                         <img src="https://lh6.googleusercontent.com/CDEnWKqS4DkOejwv6TE76O-P5716mhOe9CIIJdL0YF-QteEsz9J8WQ7irIGnw4ICQY-ZZLOXFBiUJrBq210DkmGWV0YCufS5-7floclZl2PAI6h6gYfEPANkl9XTsX2z41crMQQw" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />

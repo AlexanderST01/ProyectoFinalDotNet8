@@ -40,9 +40,13 @@
                         <div class="col-md-6">
                             <h2>@Menu.Descripcion</h2>
                             <strong>Descripc&iacute;on:</strong>
-                            @foreach (var comida in Menu.MenuDetalles)
+                            @* @foreach (var comida in Menu.MenuDetalles)
                             {
                                 <p class="text-muted">@Menu.Descripcion</p>
+                            } *@
+                            @foreach (var comida in Menu.MenuDetalles)
+                            {
+                                <p class="text-muted">@ObtenerDescripcionComida(comida.ComidaId)</p>
                             }
                             <p><strong>D&iacute;a de la semana:</strong> @Menu.DiaSemana</p>
                             <strong> Nota promedio: </strong>
@@ -227,8 +231,12 @@
     public int menuActual { get; set; }
     public string? emailActual { get; set; }
     public AuthenticationState? AuthState { get; set; }     // public List<AplicationUser> MyProperty { get; set; }
+    public List<Comidas> Comidas { get; set; } = new List<Comidas>();
+
     protected override async Task OnInitializedAsync()
     {
+        var comidas = await httpClient.GetFromJsonAsync<List<Comidas>>("api/Comidas") ?? new List<Comidas>();
+        Comidas = comidas;
         AuthState = await authenticationStateProvider.GetAuthenticationStateAsync();
         var usuarios = await httpClient.GetFromJsonAsync<List<ApplicationUser>>("api/Usuers")?? new List<ApplicationUser>();
         var menus = await httpClient.GetFromJsonAsync<List<Menu>>("api/Menus")?? new List<Menu>();
@@ -316,19 +324,27 @@
     //     var usuario = Usuarios.FirstOrDefault(u => u.UserName == id);
     //     return usuario?.Nombre ?? string.Empty;
     // }
+
     public string ObtnerNombreUsuario(string userName)
     {
         var usuario = Usuarios.FirstOrDefault(u => u.UserName!.Contains(userName));
         return usuario?.Nombre! + " " + usuario?.Apellidos!;
+
 
     }
     public void Nuevo()
     {
         comentario = new Comentarios() ;
     }
+
     private async Task HandleValidSubmit()
     {
         await Task.Run(() => Console.WriteLine("OnValidSubmit"));
     }
     
+    public string? ObtenerDescripcionComida(int comidaId)
+    {
+        var comida = Comidas.FirstOrDefault(c => c.ComidaId == comidaId);
+        return comida?.Descripcion!;
+    }
 }
