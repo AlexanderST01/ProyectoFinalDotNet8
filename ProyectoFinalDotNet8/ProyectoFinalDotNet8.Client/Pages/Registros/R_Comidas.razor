@@ -5,7 +5,7 @@
 @page "/RegistroComida/{ComidaId:int}"
 @inject NotificationService notificationService
 @inject HttpClient httpClient
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = "Admin, Empleado")]
 
 
 <RadzenNotification />

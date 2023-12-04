@@ -2,104 +2,141 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Bienvenidos al Sistema Gestión de entregas de comida para centros educativos <strong>GECCE</strong></h1>
+<h1>Bienvenidos al Sistema Gesti&oacute;n de Entregas de Comida para Centros Educativos <strong>GECCE</strong></h1>
 
 <div class="container">
     <div class="card-header">
-        <h3>Registros</h3>
+        <AuthorizeView Roles="Admin, Empleado, Director">
+            <Authorized>
+                <h3>Registros</h3>
+            </Authorized>
+        </AuthorizeView>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <div class="card">
-                <img src="https://image.freepik.com/foto-gratis/entrega-comida-nueva-normalidad_53876-96162.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid" style="max-width: 300px; height: 300px; object-fit: cover; margin: 5px;" />
-                <div class="card-body">
-                    <h5 class="card-title border-bottom border-2">Registro Despacho</h5>
-                    <p class="card-text">En este apartado podrá registrar despachos</p>
-                    <a href="/RegistroDespacho" class="btn btn-primary">Ir</a>
-                </div>
-            </div>
+            <AuthorizeView Roles="Admin, Empleado">
+                <Authorized>
+                    <div class="card">
+                        <img src="https://image.freepik.com/foto-gratis/entrega-comida-nueva-normalidad_53876-96162.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
+                        <div class="card-body">
+                            <h5 class="card-title border-bottom border-2">Registro Despacho</h5>
+                            <p class="card-text">En este apartado podrá registrar despachos</p>
+                            <a href="/RegistroDespacho" class="btn btn-primary">Ir</a>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <img src="https://stat.ameba.jp/user_images/20200501/09/0818otake0818/6a/94/j/o1080091814751719270.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid" style="max-width: 300px; height: 300px; object-fit: cover; margin: 5px;" />
-                <div class="card-body">
-                    <h5 class="card-title border-bottom border-2">Registro Menú</h5>
-                    <p class="card-text">En este apartado podrá registrar Menus.</p>
-                    <a href="/RegistroMenu" class="btn btn-primary">Ir</a>
-                </div>
-            </div>
+            <AuthorizeView Roles="Admin, Empleado">
+                <Authorized>
+                    <div class="card">
+                        <img src="https://stat.ameba.jp/user_images/20200501/09/0818otake0818/6a/94/j/o1080091814751719270.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
+                        <div class="card-body">
+                            <h5 class="card-title border-bottom border-2">Registro Menú</h5>
+                            <p class="card-text">En este apartado podrá registrar Menus.</p>
+                            <a href="/RegistroMenu" class="btn btn-primary">Ir</a>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <img src="https://allwaysdelicious.com/wp-content/uploads/2021/08/camarones-diabla-la-sq.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid" style="max-width: 300px; height: 300px; margin: 5px;" />
-                <div class="card-body">
-                    <h5 class="card-title border-bottom border-2">Registro comida</h5>
-                    <p class="card-text">En este apartado podrá registrar comida.</p>
-                    <a href="/RegistroComida" class="btn btn-primary">Ir</a>
-                </div>
-            </div>
+            <AuthorizeView Roles="Admin, Empleado">
+                <Authorized>
+                    <div class="card">
+                        <img src="https://allwaysdelicious.com/wp-content/uploads/2021/08/camarones-diabla-la-sq.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
+                        <div class="card-body">
+                            <h5 class="card-title border-bottom border-2">Registro comida</h5>
+                            <p class="card-text">En este apartado podrá registrar comida.</p>
+                            <a href="/RegistroComida" class="btn btn-primary">Ir</a>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <img src="https://th.bing.com/th/id/R.4fc8b9f93820afa9407e8d6f6d9d0ce5?rik=iyz7AXRS1pH42A&pid=ImgRaw&r=0" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid" style="max-width: 300px; height: 300px; margin: 5px;" />
-                <div class="card-body">
-                    <h5 class="card-title border-bottom border-2">Registro Centro Educativo</h5>
-                    <p class="card-text">En este apartado podrá registrar centros educativos</p>
-                    <a href="/RegistroCentroEducativo" class="btn btn-primary">Ir</a>
-                </div>
-            </div>
+            <AuthorizeView Roles="Admin, Empleado">
+                <Authorized>
+                    <div class="card">
+                        <img src="https://th.bing.com/th/id/R.4fc8b9f93820afa9407e8d6f6d9d0ce5?rik=iyz7AXRS1pH42A&pid=ImgRaw&r=0" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
+                        <div class="card-body">
+                            <h5 class="card-title border-bottom border-2">Registro Centro Educativo</h5>
+                            <p class="card-text">En este apartado podrá registrar centros educativos</p>
+                            <a href="/RegistroCentroEducativo" class="btn btn-primary">Ir</a>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
-    
- 
+
+
     <div class="card-header">
-        <h3>Consultas</h3>
+        <AuthorizeView Roles="Director, Empleado, Admin, Invitado">
+            <Authorized>
+                <h3>Consultas</h3>
+            </Authorized>
+        </AuthorizeView>
     </div>
     <div class="row">
         <div class="col-md-4">
-            <div class="card">
-                <img src="https://lh6.googleusercontent.com/CDEnWKqS4DkOejwv6TE76O-P5716mhOe9CIIJdL0YF-QteEsz9J8WQ7irIGnw4ICQY-ZZLOXFBiUJrBq210DkmGWV0YCufS5-7floclZl2PAI6h6gYfEPANkl9XTsX2z41crMQQw" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid" style="max-width: 300px; max-height: 300px; margin: 5px;" />
-                <div class="card-body">
-                    <h5 class="card-title border-bottom border-2">Consulta de Menú</h5>
-                    <p class="card-text">
-                        En este apartado podrá consultar los menus registrados, verificar para que dia de la semana fue asignado, su calificacion promedio y poder comentar acerca de dicho menu.
-                    </p>
-                    <a href="/ConsultaMenu" class="btn btn-primary">Ir</a>
-                </div>
-            </div>
+            <AuthorizeView Roles="Director, Empleado, Admin, Invitado">
+                <Authorized>
+                    <div class="card">
+                        <img src="https://lh6.googleusercontent.com/CDEnWKqS4DkOejwv6TE76O-P5716mhOe9CIIJdL0YF-QteEsz9J8WQ7irIGnw4ICQY-ZZLOXFBiUJrBq210DkmGWV0YCufS5-7floclZl2PAI6h6gYfEPANkl9XTsX2z41crMQQw" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
+                        <div class="card-body">
+                            <h5 class="card-title border-bottom border-2">Consulta de Menú</h5>
+                            <p class="card-text">
+                                En este apartado podrá consultar los menus registrados, verificar para que dia de la semana fue asignado, su calificacion promedio y poder comentar acerca de dicho menú.
+                            </p>
+                            <a href="/ConsultaMenu" class="btn btn-primary">Ir</a>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
         <div class="col-md-4">
-            <div class="card">         
-                <img src="https://www.neahoy.com/wp-content/uploads/2021/05/COMIDAS-scaled.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid" style="max-width: 300px; height: 300px; margin: 5px;" />
-                <div class="card-body">
-                    <h5 class="card-title border-bottom border-2">Consulta Comida</h5>
-                    <p class="card-text">En este apartado podrá consultar las descripciones  y tipos de comidas de las comidas registradas.</p>
-                    <a href="/ConsultaComida" class="btn btn-primary">Ir</a>
-                </div>
-            </div>
+            <AuthorizeView Roles="Empleado, Admin">
+                <Authorized>
+                    <div class="card">
+                        <img src="https://www.neahoy.com/wp-content/uploads/2021/05/COMIDAS-scaled.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
+                        <div class="card-body">
+                            <h5 class="card-title border-bottom border-2">Consulta Comida</h5>
+                            <p class="card-text">En este apartado podrá consultar las descripciones  y tipos de comidas de las comidas registradas.</p>
+                            <a href="/ConsultaComida" class="btn btn-primary">Ir</a>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
         <div class="col-md-4">
-            <div class="card">
-                <img src="https://th.bing.com/th/id/OIP.bOFnbryeKoYQU2sxD7HxqAHaFj?rs=1&pid=ImgDetMain" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid" style="max-width: 300px; height: 300px; margin: 5px;" />
-                <div class="card-body">
-                    <h5 class="card-title border-bottom border-2">Consulta Centro Centro Educativo </h5>
-                    <p class="card-text">En este apartado podrá consultar los centros educativos que se han registrados.</p>
-                    <a href="/ConsultaCentroEducativo" class="btn btn-primary">Ir</a>
-                </div>
-            </div>
+            <AuthorizeView Roles="Empleado, Admin">
+                <Authorized>
+                    <div class="card">
+                        <img src="https://th.bing.com/th/id/OIP.bOFnbryeKoYQU2sxD7HxqAHaFj?rs=1&pid=ImgDetMain" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
+                        <div class="card-body">
+                            <h5 class="card-title border-bottom border-2">Consulta Centro Educativo </h5>
+                            <p class="card-text">En este apartado podrá consultar los centros educativos que se han registrados.</p>
+                            <a href="/ConsultaCentroEducativo" class="btn btn-primary">Ir</a>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
-
-        <br>
-
         <div class="col-md-4">
-            <div class="card">
-                <img src="https://image.freepik.com/foto-gratis/entrega-comida-nueva-normalidad_53876-96162.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid" style="max-width: 300px; height: 300px; margin: 5px;" />
-                <div class="card-body">
-                    <h5 class="card-title border-bottom border-2">Consulta Despacho </h5>
-                    <p class="card-text">En este apartado podrá consultar los despachos que se han registrados con el nombre del centro educativo, el menu, descripcion de la comida, fecha y hora del despacho.</p>
-                    <a href="/ConsultaDespacho" class="btn btn-primary">Ir</a>
-                </div>
-            </div>
+            <AuthorizeView Roles="Director">
+                <Authorized>
+                    <div class="card">
+                        <img src="https://image.freepik.com/foto-gratis/entrega-comida-nueva-normalidad_53876-96162.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
+                        <div class="card-body">
+                            <h5 class="card-title border-bottom border-2">Despachos </h5>
+                            <p class="card-text">En este apartado podrá consultar los despachos que se han registrados con el nombre del centro educativo, el menu, descripcion de la comida, fecha y hora del despacho.</p>
+                            <a href="/ConsultaDespachoParaDirector" class="btn btn-primary">Ir</a>
+                        </div>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
 </div>

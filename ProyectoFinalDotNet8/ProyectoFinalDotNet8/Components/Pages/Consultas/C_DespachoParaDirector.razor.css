@@ -1,0 +1,5 @@
+﻿.image-with-space {
+    max-width: 300px;
+    max-height: 300px;
+    margin: 5px 10px 5px 10px; /* Sets a margin of 5px on the top, right, bottom, and left sides of the image */
+}

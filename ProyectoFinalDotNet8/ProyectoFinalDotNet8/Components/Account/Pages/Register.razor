@@ -119,6 +119,8 @@
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         var result = await UserManager.CreateAsync(user, Input.Password);
+        var resultRole = await UserManager.AddToRoleAsync(user, "Invitado");
+
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
@@ -172,6 +174,19 @@
         {
             throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
                 $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+        }
+    }
+
+    private ApplicationUsersRoles CreateUserRole()
+    {
+        try
+        {
+            return Activator.CreateInstance<ApplicationUsersRoles>();
+        }
+        catch
+        {
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUsersRoles)}'. " +
+                $"Ensure that '{nameof(ApplicationUsersRoles)}' is not an abstract class and has a parameterless constructor.");
         }
     }
 
