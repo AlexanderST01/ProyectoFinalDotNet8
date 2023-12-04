@@ -125,18 +125,32 @@
             </AuthorizeView>
         </div>
         <div class="col-md-4">
-            <AuthorizeView Roles="Director">
+            <AuthorizeView Roles="Empleado, Admin">
                 <Authorized>
                     <div class="card">
                         <img src="https://image.freepik.com/foto-gratis/entrega-comida-nueva-normalidad_53876-96162.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
                         <div class="card-body">
-                            <h5 class="card-title border-bottom border-2">Despachos </h5>
+                            <h5 class="card-title border-bottom border-2">Consulta despacho </h5>
                             <p class="card-text">En este apartado podrá consultar los despachos que se han registrados con el nombre del centro educativo, el menu, descripcion de la comida, fecha y hora del despacho.</p>
-                            <a href="/ConsultaDespachoParaDirector" class="btn btn-primary">Ir</a>
+                            <a href="/ConsultaDespacho" class="btn btn-primary">Ir</a>
                         </div>
                     </div>
                 </Authorized>
             </AuthorizeView>
+            <div class="col-md-4">
+                <AuthorizeView Roles="Director">
+                    <Authorized>
+                        <div class="card">
+                            <img src="https://image.freepik.com/foto-gratis/entrega-comida-nueva-normalidad_53876-96162.jpg" alt="Imagen de algo" class="rounded mx-auto d-block img-fluid image-with-space-Home" />
+                            <div class="card-body">
+                                <h5 class="card-title border-bottom border-2">Despachos </h5>
+                                <p class="card-text">En este apartado podrá consultar los despachos que se han registrados con el nombre del centro educativo, el menu, descripcion de la comida, fecha y hora del despacho.</p>
+                                <a href="/ConsultaDespachoParaDirector" class="btn btn-primary">Ir</a>
+                            </div>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
         </div>
     </div>
 </div>
