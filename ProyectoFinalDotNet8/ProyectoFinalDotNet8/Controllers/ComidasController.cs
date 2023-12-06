@@ -15,31 +15,49 @@ namespace ProyectoFinalDotNet8.Controllers
     public class ComidasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ComidasController> _logger;
 
-        public ComidasController(ApplicationDbContext context)
+        public ComidasController(ApplicationDbContext context, ILogger<ComidasController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Comidas
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Comidas>>> GetComidas()
         {
-            return await _context.Comidas.ToListAsync();
+            try
+            {
+                return await _context.Comidas.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         // GET: api/Comidas/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Comidas>> GetComidas(int id)
         {
-            var comidas = await _context.Comidas.FindAsync(id);
-
-            if (comidas == null)
+            try
             {
-                return NotFound();
-            }
+                var comidas = await _context.Comidas.FindAsync(id);
 
-            return comidas;
+                if (comidas == null)
+                {
+                    return NotFound();
+                }
+
+                return comidas;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         // PUT: api/Comidas/5
@@ -47,18 +65,19 @@ namespace ProyectoFinalDotNet8.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutComidas(int id, Comidas comidas)
         {
-            if (id != comidas.ComidaId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(comidas).State = EntityState.Modified;
-
             try
             {
+                if (id != comidas.ComidaId)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(comidas).State = EntityState.Modified;
+
                 await _context.SaveChangesAsync();
+                return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!ComidasExists(id))
                 {
@@ -66,11 +85,15 @@ namespace ProyectoFinalDotNet8.Controllers
                 }
                 else
                 {
-                    throw;
+                    _logger.LogError(ex, ex.Message);
+                    return StatusCode(500, "Internal Server Error");
                 }
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         // POST: api/Comidas
@@ -78,30 +101,46 @@ namespace ProyectoFinalDotNet8.Controllers
         [HttpPost]
         public async Task<ActionResult<Comidas>> PostComidas(Comidas comidas)
         {
-            if (!ComidasExists(comidas.ComidaId))
-                _context.Comidas.Add(comidas);
-            else
-                _context.Comidas.Update(comidas);
+            try
+            {
+                if (!ComidasExists(comidas.ComidaId))
+                    _context.Comidas.Add(comidas);
+                else
+                    _context.Comidas.Update(comidas);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-            return Ok(comidas);
+                return Ok(comidas);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         // DELETE: api/Comidas/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComidas(int id)
         {
-            var comidas = await _context.Comidas.FindAsync(id);
-            if (comidas == null)
+            try
             {
-                return NotFound();
+                var comidas = await _context.Comidas.FindAsync(id);
+                if (comidas == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Comidas.Remove(comidas);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
             }
-
-            _context.Comidas.Remove(comidas);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         private bool ComidasExists(int id)
@@ -109,4 +148,10 @@ namespace ProyectoFinalDotNet8.Controllers
             return _context.Comidas.Any(e => e.ComidaId == id);
         }
     }
+
 }
+
+
+
+
+
