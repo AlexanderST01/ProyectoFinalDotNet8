@@ -5,7 +5,9 @@ using ProyectoFinalDotNet8.Client.Pages;
 using ProyectoFinalDotNet8.Components;
 using ProyectoFinalDotNet8.Components.Account;
 using ProyectoFinalDotNet8.Data;
+using Microsoft.ApplicationInsights;
 using Radzen;
+using Microsoft.ApplicationInsights.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -20,6 +22,9 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
 builder.Services.AddControllers();
+//builder.AddApplicationInsightsTelemetry();
+
+//builder.Services.ConfigureTelemetryModule<RequestTrackingTelemetryModule>((module, o) => module.EnableW3CHeadersExtraction = true);
 builder.Services.AddScoped(http => new HttpClient
 {
     BaseAddress = new Uri(builder.Configuration.GetSection("BaseAddress").Value!)
@@ -44,6 +49,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddApplicationInsightsTelemetry();
 
 var app = builder.Build();
 

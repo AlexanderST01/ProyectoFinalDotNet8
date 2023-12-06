@@ -16,14 +16,65 @@ namespace ProyectoFinalDotNet8.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+
         public CentrosEducativosController(ApplicationDbContext context)
         {
             _context = context;
         }
+        private readonly ILogger<CentrosEducativosController> _logger;
+
+
+        [HttpGet("prueba")]
+        public IEnumerable<CentrosEducativos> Get()
+        {
+            var iteracion = 1;
+
+            _logger.LogDebug($"Debug {iteracion}");
+            _logger.LogInformation($"Information {iteracion}");
+            _logger.LogWarning($"Warning {iteracion}");
+            _logger.LogError($"Error {iteracion}");
+            _logger.LogCritical($"Critical {iteracion}");
+
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+
+
+            return _context.CentrosEducativos.ToList();
+            //var rng = new Random();
+            //return IEnumerable<CentrosEducativos>(Enumerable.Range(0,1).Select(index => new CentrosEducativos
+            //{
+            //    CentroEducativoId = index,
+            //    Nombre = "Nombre",
+            //    Direccion = "Direccion",
+            //    CantidadMatricula = 23,
+            //    DirectorId = "DirectorId",
+            //    CodigoDistrital = "CodigoDistrital",
+            //    CodigoRegional = "CodigoRegional",
+
+            //    }).ToArray());              
+      
+
+        }
+
+        private IEnumerable<T> IEnumerable<T>(T[] centrosEducativos)
+        {
+            throw new NotImplementedException();
+        }
+
+        public CentrosEducativosController(ILogger<CentrosEducativosController> logger)
+        {
+            _logger = logger;
+        }
 
         // GET: api/CentrosEducativos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CentrosEducativos>>> GetCentrosEducativos()
+        public async  Task<ActionResult<IEnumerable<CentrosEducativos>>> GetCentrosEducativos()
         {
             return await _context.CentrosEducativos.ToListAsync();
         }
