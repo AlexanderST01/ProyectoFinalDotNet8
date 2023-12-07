@@ -46,19 +46,6 @@ namespace ProyectoFinalDotNet8.Controllers
 
 
             return _context.CentrosEducativos.ToList();
-            //var rng = new Random();
-            //return IEnumerable<CentrosEducativos>(Enumerable.Range(0,1).Select(index => new CentrosEducativos
-            //{
-            //    CentroEducativoId = index,
-            //    Nombre = "Nombre",
-            //    Direccion = "Direccion",
-            //    CantidadMatricula = 23,
-            //    DirectorId = "DirectorId",
-            //    CodigoDistrital = "CodigoDistrital",
-            //    CodigoRegional = "CodigoRegional",
-
-            //    }).ToArray());              
-      
 
         }
 

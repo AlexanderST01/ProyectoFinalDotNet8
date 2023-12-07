@@ -22,9 +22,6 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
 builder.Services.AddControllers();
-//builder.AddApplicationInsightsTelemetry();
-
-//builder.Services.ConfigureTelemetryModule<RequestTrackingTelemetryModule>((module, o) => module.EnableW3CHeadersExtraction = true);
 builder.Services.AddScoped(http => new HttpClient
 {
     BaseAddress = new Uri(builder.Configuration.GetSection("BaseAddress").Value!)

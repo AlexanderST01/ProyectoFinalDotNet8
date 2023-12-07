@@ -204,7 +204,7 @@
             switch (opciones)
             {
                 case 0:                  
-                    Despachos = (await httpClient.GetFromJsonAsync<List<Despacho>>("api/Despachos"))!
+                    Despachos = (await httpClient.GetFromJsonAsync<List<Despacho>>("c"))!
                             .Where(d => d.Fecha.Date >= Desde.Date && d.Fecha.Date <= Hasta.Date).ToList();
                     break;
 

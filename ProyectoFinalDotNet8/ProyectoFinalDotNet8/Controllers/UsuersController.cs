@@ -1,10 +1,13 @@
-﻿//using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProyectoFinalDotNet8.Client;
+using Microsoft.Extensions.Logging; // Add this namespace
 using ProyectoFinalDotNet8.Data;
 using Shared.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProyectoFinalDotNet8.Controllers
 {
@@ -13,82 +16,129 @@ namespace ProyectoFinalDotNet8.Controllers
     public class UsuersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<UsuersController> _logger; // Add logger
 
-        public UsuersController(ApplicationDbContext context)
+        public UsuersController(ApplicationDbContext context, ILogger<UsuersController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetUser()
         {
-            return await _context.Users.ToListAsync();
+            try
+            {
+                return await _context.Users.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         [HttpGet("RolesDirector")]
-        public async Task<ActionResult<IEnumerable<String>>> GetRole()
+        public async Task<ActionResult<IEnumerable<string>>> GetRole()
         {
-            var Director = (await _context.Roles
-                .FirstOrDefaultAsync(r => r.Name == "Director"))!.Id;
-            var roleUser = await _context.UserRoles
-                .Where(r => r.RoleId == Director)
-                .ToListAsync();
-            var Directores = roleUser.Select(r => r.UserId).ToList();
-           
-            return Directores!;
+            try
+            {
+                var Director = (await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Director"))?.Id;
+                var roleUser = await _context.UserRoles.Where(r => r.RoleId == Director).ToListAsync();
+                var Directores = roleUser.Select(r => r.UserId).ToList();
+                return Directores!;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
+
         [HttpGet("ObtenerRole")]
-        public async Task<ActionResult<String>> GetRole(string UserId)
+        public async Task<ActionResult<string>> GetRole(string UserId)
         {
-            var roleUser = await _context.UserRoles
-                .Where(r => r.UserId == UserId)
-                .ToListAsync();
-            var Roles = roleUser.Select(r => r.RoleId).ToList();
-            return Roles[0];
+            try
+            {
+                var roleUser = await _context.UserRoles.Where(r => r.UserId == UserId).ToListAsync();
+                var Roles = roleUser.Select(r => r.RoleId).ToList();
+                return Roles[0];
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
+
         // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ApplicationUser>> GetUser(string id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == id);
-
-            if (user == null)
+            try
             {
-                return NotFound();
-            }
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == id);
 
-            return user;
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         [HttpGet("UserRole")]
-        public async Task<ActionResult<ApplicationUser>> GetUserRole()
+        public async Task<ActionResult<IEnumerable<IdentityUserRole<string>>>> GetUserRole()
         {
-            var userRoles = await _context.UserRoles.ToListAsync();
-            return Ok(userRoles);
+            try
+            {
+                var userRoles = await _context.UserRoles.ToListAsync();
+                return Ok(userRoles);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         [HttpGet("Roles")]
         public async Task<ActionResult<IEnumerable<IdentityRole>>> GetRoles()
         {
-            return await _context.Roles.ToListAsync();
+            try
+            {
+                return await _context.Roles.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(string id, ApplicationUser User)
         {
-            if (id != User.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(User).State = EntityState.Modified;
-
             try
             {
+                if (id != User.Id)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(User).State = EntityState.Modified;
+
                 await _context.SaveChangesAsync();
+                return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!UserExists(id))
                 {
@@ -96,26 +146,38 @@ namespace ProyectoFinalDotNet8.Controllers
                 }
                 else
                 {
-                    throw;
+                    _logger.LogError(ex, ex.Message);
+                    return StatusCode(500, "Internal Server Error");
                 }
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
-        // POST: api/Menus
+        // POST: api/Usuers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ApplicationUser>> PostMenu(ApplicationUser user)
+        public async Task<ActionResult<ApplicationUser>> PostUser(ApplicationUser user)
         {
-            if (!UserExists(user.Id))
-                _context.Users.Add(user);
-            else
-                _context.Users.Update(user);
+            try
+            {
+                if (!UserExists(user.Id))
+                    _context.Users.Add(user);
+                else
+                    _context.Users.Update(user);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-            return Ok(user);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         private bool UserExists(string id)

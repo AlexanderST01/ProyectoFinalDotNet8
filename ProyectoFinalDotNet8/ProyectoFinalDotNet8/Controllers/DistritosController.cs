@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging; // Add this namespace
 using ProyectoFinalDotNet8.Data;
 using Shared.Models;
 
@@ -15,50 +16,68 @@ namespace ProyectoFinalDotNet8.Controllers
     public class DistritosController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<DistritosController> _logger; // Add logger
 
-        public DistritosController(ApplicationDbContext context)
+        public DistritosController(ApplicationDbContext context, ILogger<DistritosController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Distritos
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Distritos>>> GetDistritos()
         {
-            return await _context.Distritos.ToListAsync();
+            try
+            {
+                return await _context.Distritos.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         // GET: api/Distritos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Distritos>> GetDistritos(int id)
         {
-            var distritos = await _context.Distritos.FindAsync(id);
-
-            if (distritos == null)
+            try
             {
-                return NotFound();
-            }
+                var distritos = await _context.Distritos.FindAsync(id);
 
-            return distritos;
+                if (distritos == null)
+                {
+                    return NotFound();
+                }
+
+                return distritos;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         // PUT: api/Distritos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDistritos(int id, Distritos distritos)
         {
-            if (id != distritos.DistritoId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(distritos).State = EntityState.Modified;
-
             try
             {
+                if (id != distritos.DistritoId)
+                {
+                    return BadRequest();
+                }
+
+                _context.Entry(distritos).State = EntityState.Modified;
+
                 await _context.SaveChangesAsync();
+                return NoContent();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
                 if (!DistritosExists(id))
                 {
@@ -66,38 +85,57 @@ namespace ProyectoFinalDotNet8.Controllers
                 }
                 else
                 {
-                    throw;
+                    _logger.LogError(ex, ex.Message);
+                    return StatusCode(500, "Internal Server Error");
                 }
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         // POST: api/Distritos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Distritos>> PostDistritos(Distritos distritos)
         {
-            _context.Distritos.Add(distritos);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Distritos.Add(distritos);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDistritos", new { id = distritos.DistritoId }, distritos);
+                return CreatedAtAction("GetDistritos", new { id = distritos.DistritoId }, distritos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         // DELETE: api/Distritos/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDistritos(int id)
         {
-            var distritos = await _context.Distritos.FindAsync(id);
-            if (distritos == null)
+            try
             {
-                return NotFound();
+                var distritos = await _context.Distritos.FindAsync(id);
+                if (distritos == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Distritos.Remove(distritos);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
             }
-
-            _context.Distritos.Remove(distritos);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
         private bool DistritosExists(int id)
